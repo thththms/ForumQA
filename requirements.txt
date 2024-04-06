@@ -1,0 +1,6 @@
+SQLAlchemy
+werkzeug
+flask
+wtforms
+pillow
+requests
