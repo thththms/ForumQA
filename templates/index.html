@@ -3,14 +3,14 @@
   <head>
     <meta charset="UTF-8">
     <title> PythonQ&A </title>
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="../static/css/style.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
      <meta name="viewport" content="width=device-width, initial-scale=1.0">
    </head>
 <body>
   <header>
-      <img src="img\logo.png" class="img">
+      <img src="../static/img/logo.png" class="img">
       <div class="txt">
           <span>Задай вопрос на любую тему, связанную с python или помоги своим ответом кому-то другому</span>
       </div>
@@ -18,20 +18,25 @@
           <span>Задать вопрос</span>
       </a>
       <div class="buttons">
-          <div class="buttons_mini">
-            <input class="btn btn-outline-primary btn-lg" type="button" value="Login">
-          </div>
-          <div class="buttons_mini2">
-            <input class="btn btn-outline-info btn-lg" type="button" value="Register">
-          </div>
+          {% if current_user.is_authenticated %}
+          {% set a = "../static/img/users_avatars/image_of_"+  current_user.email  +"_.png"%}
+            <img src={{a}} class="img"><a class="buttons_mini" href="/logout">{{ current_user.nickname }}</a>
+          {% else %}
+              <div class="buttons_mini">
+                <input class="btn btn-outline-primary btn-lg" type="button" value="Login">
+              </div>
+              <div class="buttons_mini2">
+                <input class="btn btn-outline-info btn-lg" type="button" value="Register">
+              </div>
+          {% endif %}
       </div>
 
   </header>
   <div class="block_leaderboard">
         <span class="txt_leaderboard1">Больше всего спрашивал:</span>
         <div class="block_leaderboard1">
-            <img src="img\avatar.png" class="img_leaderboard1">
-            <span>User User</span>
+            <img src="../static/img/avatar.png" class="img_leaderboard1">
+            <span>{{ email }}</span>
         </div>
     </div>
   <div class="block1">
@@ -44,7 +49,7 @@
   <div class="block_leaderboard">
         <span class="txt_leaderboard1">Больше всего отвечал:</span>
         <div class="block_leaderboard1">
-            <img src="img\avatar.png" class="img_leaderboard1">
+            <img src="../static/img/avatar.png" class="img_leaderboard1">
             <span>User User</span>
         </div>
     </div>
