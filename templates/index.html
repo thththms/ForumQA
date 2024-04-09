@@ -22,12 +22,12 @@
           {% set a = "../static/img/users_avatars/image_of_"+  current_user.email  +"_.png"%}
             <img src={{a}} class="img"><a class="buttons_mini" href="/logout">{{ current_user.nickname }}</a>
           {% else %}
-              <div class="buttons_mini">
+              <a href="./login" class="buttons_mini">
                 <input class="btn btn-outline-primary btn-lg" type="button" value="Login">
-              </div>
-              <div class="buttons_mini2">
+              </a>
+              <a href="./reg" class="buttons_mini2">
                 <input class="btn btn-outline-info btn-lg" type="button" value="Register">
-              </div>
+              </a>
           {% endif %}
       </div>
 
