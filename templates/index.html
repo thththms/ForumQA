@@ -14,59 +14,72 @@
       <div class="txt">
           <span>Задай вопрос на любую тему, связанную с python или помоги своим ответом кому-то другому</span>
       </div>
-      {% if current_user.is_authenticated %}
-          <a href="./make_question" class="header-block">
-              <span>Задать вопрос</span>
-          </a>
-      {% else %}
-          <a href="./login" class="header-block">
-              <span>Задать вопрос</span>
-          </a>
-      {% endif %}
-      {% if current_user.is_authenticated %}
-          <div class="buttons">
-              {% set a = "../static/img/users_avatars/image_of_"+  current_user.email  +"_.png"%}
-                <img src={{a}} class="img"><a class="buttons_mini" href="/logout">{{ current_user.nickname }}</a>
-          </div>
-      {% else %}
-          <div class="buttons1">
+      <a target="_blank_" href="http://127.0.0.1:5000" class="header-block">
+          <span>Задать вопрос</span>
+      </a>
+      <div class="buttons">
+          {% if current_user.is_authenticated %}
+          {% set a = "../static/img/users_avatars/image_of_"+  current_user.email  +"_.png"%}
+            <img src={{a}} class="img"><a class="buttons_mini" href="/logout">{{ current_user.nickname }}</a>
+          {% else %}
               <a href="./login" class="buttons_mini">
                 <input class="btn btn-outline-primary btn-lg" type="button" value="Login">
               </a>
               <a href="./reg" class="buttons_mini2">
                 <input class="btn btn-outline-info btn-lg" type="button" value="Register">
               </a>
-              </div>
-      {% endif %}
+          {% endif %}
+      </div>
 
   </header>
-  <div class="mega_block1">
-    <div class="block_leaderboard" >
+  <div class="block_leaderboard">
         <span class="txt_leaderboard1">Больше всего спрашивал:</span>
         <div class="block_leaderboard1">
             <img src="../static/img/avatar.png" class="img_leaderboard1">
             <span>{{ email }}</span>
         </div>
     </div>
-    <div class="block_leaderboard">
+  <div class="block1">
+      <div class="text-content">
+        <h2>Learn To Enjoy,<br>Every Moment Of Your Life</h2>
+        <p class="txt_in_block">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Laborum facere in nam, officiis aspernatur consectetur aliquid sequi possimus et. Sint.</p>
+        <input class="btn btn-outline-primary btn-lg" type="button" value="Ответить">
+      </div>
+    </div>
+  <div class="block_leaderboard">
         <span class="txt_leaderboard1">Больше всего отвечал:</span>
         <div class="block_leaderboard1">
             <img src="../static/img/avatar.png" class="img_leaderboard1">
             <span>User User</span>
         </div>
     </div>
-  </div>
-  <div class="mega_block2">
-    {% for item in questions %}
-        <div class="block">
-          <div class="text-content">
-            <p class="text_question">{{item.question}} от {{item.user.nickname}}</p>
-            <p class="txt_in_block">{{item.explanation}}</p>
-              {% set a = "./answer/"+ item.id|string %}
-            <a href={{a}} class="btn btn-outline-primary btn-lg">Ответить</a>
-          </div>
-        </div>
-    {% endfor %}
-  </div>
+  <div class="block1">
+      <div class="text-content">
+        <h2>Learn To Enjoy,<br>Every Moment Of Your Life</h2>
+        <p class="txt_in_block">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Laborum facere in nam, officiis aspernatur consectetur aliquid sequi possimus et. Sint.</p>
+        <input class="btn btn-outline-primary btn-lg" type="button" value="Ответить">
+      </div>
+    </div>
+  <div class="block">
+      <div class="text-content">
+        <h2>Learn To Enjoy,<br>Every Moment Of Your Life</h2>
+        <p class="txt_in_block">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Laborum facere in nam, officiis aspernatur consectetur aliquid sequi possimus et. Sint.</p>
+        <input class="btn btn-outline-primary btn-lg" type="button" value="Ответить">
+      </div>
+    </div>
+  <div class="block">
+      <div class="text-content">
+        <h2>Learn To Enjoy,<br>Every Moment Of Your Life</h2>
+        <p class="txt_in_block">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Laborum facere in nam, officiis aspernatur consectetur aliquid sequi possimus et. Sint.</p>
+        <input class="btn btn-outline-primary btn-lg" type="button" value="Ответить">
+      </div>
+    </div>
+  <div class="block">
+      <div class="text-content">
+        <h2>Learn To Enjoy,<br>Every Moment Of Your Life</h2>
+        <p class="txt_in_block">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Laborum facere in nam, officiis aspernatur consectetur aliquid sequi possimus et. Sint.</p>
+        <input class="btn btn-outline-primary btn-lg" type="button" value="Ответить">
+      </div>
+    </div>
 </body>
 </html>
