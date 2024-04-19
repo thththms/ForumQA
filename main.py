@@ -2,9 +2,11 @@ from flask import Flask, render_template, redirect, request, url_for
 from forms.login_form import LoginForm
 from forms.register_form import ReqisterForm
 from forms.question_form import QuestionForm
+from forms.quest_answer_form import QuestionAnswerForm
 from data import db_session
 from data.users import User
 from data.questions import Questions
+from data.answers import Answers
 import base64
 from PIL import Image
 from io import BytesIO
@@ -82,22 +84,37 @@ def make_question():
     return render_template('make_question.html', form=form)
 
 
+@app.route('/answer/<int:question_id>', methods=['GET', 'POST'])
+@login_required
+def answer(question_id):
+    form = QuestionAnswerForm()
+    if form.submit.data:
+        db_sess = db_session.create_session()
+        answ = Answers()
+        answ.answer = form.answer.data
+        answ.question_id = question_id
+        current_user.answer.append(answ)
+        db_sess.merge(current_user)
+        db_sess.commit()
+        return redirect(f'/answer/{question_id}')
+    db_sess = db_session.create_session()
+    question = db_sess.query(Questions).filter(Questions.id == question_id).first()
+    answers = db_sess.query(Answers).filter(Answers.question_id == question_id)
+    user = db_sess.query(User).filter(User.id == question.user_id).first()
+    emails = []
+    for i in answers:
+        emails.append([db_sess.query(User).filter(User.id == i.user_id).first(), i])
+
+    params = {'form': form, 'question': question, 'answers': answers, 'emails': emails, 'user': user}
+
+    return render_template('question_page.html', **params)
+
+
 @app.route('/logout')
 @login_required
 def logout():
     logout_user()
     return redirect("/")
-
-
-@app.route('/answer/<int:question_id>')
-def answer(question_id):
-    db_sess = db_session.create_session()
-    questions = db_sess.query(Questions).filter(Questions.id == question_id).first()
-
-    param = {}
-    param['questions'] = questions
-    param['email'] = "Ученик Яндекс.Лицея"
-    return f"""Id вопроса {question_id}"""
 
 
 @login_manager.user_loader
