@@ -11,7 +11,7 @@
 <body>
   <header>
       <div class="block_header">
-        Вопрос пользователя {{ user.nickname }}
+        Вопрос пользователя <a href="/{{ user.nickname }}">{{ user.nickname }}</a>
       </div>
   </header>
   <form action="" method="post" novalidate>
@@ -24,10 +24,11 @@
       {% for item in emails %}
           <div class="block3">
                   {% set a = "../static/img/users_avatars/image_of_"+  item[0].email  +"_.png"%}
-                    <img src={{a}} class="img"><span> {{ item[0].nickname }} отвечает: {{ item[1].answer }}</span>
+                    <a href="/{{ item[0].nickname }}"><img src={{a}} class="img"></a><span> {{ item[0].nickname }} отвечает: {{ item[1].answer }}</span>
               </div>
       {% endfor %}
-      <div class="block1">
+      {% if current_user.is_authenticated %}
+          <div class="block1">
           {{ form.answer.label }}
         </div>
       <div>
@@ -38,6 +39,12 @@
                 {{ form.submit(type="submit", class="btn btn-outline-primary btn-lg") }}
               </div>
         </div>
+      {% else %}
+          <a href="../login" class="block1">
+              <span>Чтобы ответить, войдите в аккаунт</span>
+          </a>
+      {% endif %}
+
   </form>
 </body>
 </html>

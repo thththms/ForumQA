@@ -22,10 +22,30 @@ app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
 @app.route('/index')
 def index():
     db_sess = db_session.create_session()
+    users = db_sess.query(User)
+    top_answ_users = []
+    top_quest_users = []
+    for user in users:
+        answers = db_sess.query(Answers).filter(Answers.user_id == user.id)
+        ans_count = []
+        for answer in answers:
+            ans_count.append(answer.question_id)
+        ans_count = set(ans_count)
+        top_answ_users.append((len(ans_count), user))
+
+        questions = db_sess.query(Questions).filter(Questions.user_id == user.id)
+
+        top_quest_users.append((len(list(questions)), user))
+
+    top_answ_user = sorted(top_answ_users, key=lambda x: x[0], reverse=True)[0][1]
+    top_quest_user = sorted(top_quest_users, key=lambda x: x[0], reverse=True)[0][1]
+
     questions = db_sess.query(Questions)
+
     param = {}
     param['questions'] = questions
-    param['email'] = "Ученик Яндекс.Лицея"
+    param['top_answ_user'] = top_answ_user
+    param['top_quest_user'] = top_quest_user
     return render_template('index.html', **param)
 
 
@@ -85,17 +105,19 @@ def make_question():
 
 
 @app.route('/answer/<int:question_id>', methods=['GET', 'POST'])
-@login_required
 def answer(question_id):
     form = QuestionAnswerForm()
     if form.submit.data:
-        db_sess = db_session.create_session()
-        answ = Answers()
-        answ.answer = form.answer.data
-        answ.question_id = question_id
-        current_user.answer.append(answ)
-        db_sess.merge(current_user)
-        db_sess.commit()
+        try:
+            db_sess = db_session.create_session()
+            answ = Answers()
+            answ.answer = form.answer.data
+            answ.question_id = question_id
+            current_user.answer.append(answ)
+            db_sess.merge(current_user)
+            db_sess.commit()
+        except BaseException():
+            return redirect(f'./login')
         return redirect(f'/answer/{question_id}')
     db_sess = db_session.create_session()
     question = db_sess.query(Questions).filter(Questions.id == question_id).first()
@@ -108,6 +130,19 @@ def answer(question_id):
     params = {'form': form, 'question': question, 'answers': answers, 'emails': emails, 'user': user}
 
     return render_template('question_page.html', **params)
+
+
+@app.route('/<nickname>', methods=['GET', 'POST'])
+def user_page(nickname):
+    db_sess = db_session.create_session()
+    user = db_sess.query(User).filter(User.nickname == nickname).first()
+    questions = db_sess.query(Questions).filter(Questions.user_id == user.id)
+
+
+    param = {}
+    param['questions'] = questions
+    param['user'] = user
+    return render_template('user_page.html', **param)
 
 
 @app.route('/logout')

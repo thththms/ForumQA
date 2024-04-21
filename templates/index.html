@@ -10,7 +10,7 @@
    </head>
 <body>
   <header>
-      <img src="../static/img/logo.png" class="img">
+      <a href="../"><img src="../static/img/logo.png" class="img"></a>
       <div class="txt">
           <span>Задай вопрос на любую тему, связанную с python или помоги своим ответом кому-то другому</span>
       </div>
@@ -26,7 +26,7 @@
       {% if current_user.is_authenticated %}
           <div class="buttons">
               {% set a = "../static/img/users_avatars/image_of_"+  current_user.email  +"_.png"%}
-                <img src={{a}} class="img"><a class="buttons_mini" href="/logout">{{ current_user.nickname }}</a>
+                <img src={{a}} class="img"><a class="buttons_mini" href="/{{ current_user.nickname }}">{{ current_user.nickname }}</a>
           </div>
       {% else %}
           <div class="buttons1">
@@ -44,15 +44,17 @@
     <div class="block_leaderboard" >
         <span class="txt_leaderboard1">Больше всего спрашивал:</span>
         <div class="block_leaderboard1">
-            <img src="../static/img/avatar.png" class="img_leaderboard1">
-            <span>{{ email }}</span>
+            {% set b = "../static/img/users_avatars/image_of_"+  top_quest_user.email  +"_.png"%}
+            <img src={{b}} class="img">
+            <a href="/{{ top_quest_user.nickname }}">{{ top_quest_user.nickname }}</a>
         </div>
     </div>
     <div class="block_leaderboard">
         <span class="txt_leaderboard1">Больше всего отвечал:</span>
         <div class="block_leaderboard1">
-            <img src="../static/img/avatar.png" class="img_leaderboard1">
-            <span>User User</span>
+            {% set b = "../static/img/users_avatars/image_of_"+  top_answ_user.email  +"_.png"%}
+            <img src={{b}} class="img">
+            <a href="/{{ top_answ_user.nickname }}">{{ top_answ_user.nickname }}</a>
         </div>
     </div>
   </div>

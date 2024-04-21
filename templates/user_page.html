@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="UTF-8">
+    <title> {{ user.nickname }} | PythonQ&A </title>
+    <link rel="stylesheet" href="../static/css/style_for_user_page.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   </head>
+<body>
+  <header>
+      <div class="block_header">
+        {% set a = "../static/img/users_avatars/image_of_"+  user.email  +"_.png"%}
+        Страница пользователя <img src={{a}} class="img"> {{ user.nickname }}
+      </div>
+  </header>
+  <div class="block1">
+          Стаж в годах: {{ user.age_of_python }}
+        </div>
+  {% if current_user.nickname == user.nickname %}
+    <a class="block1" href="/logout">Выйти из аккаунта</a>
+  {% endif %}
+    {% for item in questions %}
+        <div class="block">
+          <div class="text-content">
+            <p class="text_question">{{item.question}} от {{item.user.nickname}}</p>
+            <p class="txt_in_block">{{item.explanation}}</p>
+              {% set a = "./answer/"+ item.id|string %}
+            <a href={{a}} class="btn btn-outline-primary btn-lg">Ответить</a>
+          </div>
+        </div>
+    {% endfor %}
+
+</body>
+</html>
