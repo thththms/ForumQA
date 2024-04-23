@@ -26,7 +26,7 @@
       {% if current_user.is_authenticated %}
           <div class="buttons">
               {% set a = "../static/img/users_avatars/image_of_"+  current_user.email  +"_.png"%}
-                <img src={{a}} class="img"><a class="buttons_mini" href="/{{ current_user.nickname }}">{{ current_user.nickname }}</a>
+                <img src={{a}} class="img"><a class="buttons_mini" href="/users/{{ current_user.nickname }}">{{ current_user.nickname }}</a>
           </div>
       {% else %}
           <div class="buttons1">
@@ -46,7 +46,7 @@
         <div class="block_leaderboard1">
             {% set b = "../static/img/users_avatars/image_of_"+  top_quest_user.email  +"_.png"%}
             <img src={{b}} class="img">
-            <a href="/{{ top_quest_user.nickname }}">{{ top_quest_user.nickname }}</a>
+            <a href="/users/{{ top_quest_user.nickname }}">{{ top_quest_user.nickname }}</a>
         </div>
     </div>
     <div class="block_leaderboard">
@@ -54,7 +54,7 @@
         <div class="block_leaderboard1">
             {% set b = "../static/img/users_avatars/image_of_"+  top_answ_user.email  +"_.png"%}
             <img src={{b}} class="img">
-            <a href="/{{ top_answ_user.nickname }}">{{ top_answ_user.nickname }}</a>
+            <a href="/users/{{ top_answ_user.nickname }}">{{ top_answ_user.nickname }}</a>
         </div>
     </div>
   </div>

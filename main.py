@@ -11,8 +11,11 @@ import base64
 from PIL import Image
 from io import BytesIO
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
+from flask_restful import reqparse, abort, Api, Resource
+import requests
 
 app = Flask(__name__)
+api = Api(app)
 login_manager = LoginManager()
 login_manager.init_app(app)
 app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
@@ -68,23 +71,31 @@ def login():
 def register():
     form = ReqisterForm()
     if form.validate_on_submit():
-        avatar = request.files['avatar']
-        if form.password.data != form.password_again.data:
-            return render_template('register.html', form=form, message="Пароли не совпадают")
-        db_sess = db_session.create_session()
-        if db_sess.query(User).filter(User.email == form.email.data).first():
-            return render_template('register.html', form=form, message="Такой пользователь уже есть")
-        user = User(
-            email=form.email.data,
-            nickname=form.nickname.data,
-            age_of_python=form.age_of_python.data,
-            avatar=avatar.read()
-        )
-        user.set_password(form.password.data)
-        db_sess.add(user)
-        db_sess.commit()
-        image(form.email.data)
-        return redirect('/login')
+        avatar = request.files['file']
+        avatar = avatar.read()
+        if not avatar:
+            response = requests.get("https://api.thecatapi.com/v1/images/search")
+            url = response.json()[0]['url']
+            response = requests.get(url)
+            image(form.email.data, img_in_bytes=BytesIO(response.content))
+            return redirect('/login')
+
+        else:
+            if form.password.data != form.password_again.data:
+                return render_template('register.html', form=form, message="Пароли не совпадают")
+            db_sess = db_session.create_session()
+            if db_sess.query(User).filter(User.email == form.email.data).first():
+                return render_template('register.html', form=form, message="Такой пользователь уже есть")
+            user = User(
+                email=form.email.data,
+                nickname=form.nickname.data,
+                age_of_python=form.age_of_python.data,
+            )
+            user.set_password(form.password.data)
+            db_sess.add(user)
+            db_sess.commit()
+            image(form.email.data, BytesIO(avatar))
+            return redirect('/login')
     return render_template('register.html', form=form)
 
 
@@ -108,16 +119,13 @@ def make_question():
 def answer(question_id):
     form = QuestionAnswerForm()
     if form.submit.data:
-        try:
-            db_sess = db_session.create_session()
-            answ = Answers()
-            answ.answer = form.answer.data
-            answ.question_id = question_id
-            current_user.answer.append(answ)
-            db_sess.merge(current_user)
-            db_sess.commit()
-        except BaseException():
-            return redirect(f'./login')
+        db_sess = db_session.create_session()
+        answ = Answers()
+        answ.answer = form.answer.data
+        answ.question_id = question_id
+        current_user.answer.append(answ)
+        db_sess.merge(current_user)
+        db_sess.commit()
         return redirect(f'/answer/{question_id}')
     db_sess = db_session.create_session()
     question = db_sess.query(Questions).filter(Questions.id == question_id).first()
@@ -132,12 +140,11 @@ def answer(question_id):
     return render_template('question_page.html', **params)
 
 
-@app.route('/<nickname>', methods=['GET', 'POST'])
+@app.route('/users/<nickname>', methods=['GET', 'POST'])
 def user_page(nickname):
     db_sess = db_session.create_session()
     user = db_sess.query(User).filter(User.nickname == nickname).first()
     questions = db_sess.query(Questions).filter(Questions.user_id == user.id)
-
 
     param = {}
     param['questions'] = questions
@@ -158,10 +165,8 @@ def load_user(user_id):
     return db_sess.query(User).get(user_id)
 
 
-def image(email: str):
-    db_sess = db_session.create_session()
-    im = Image.open(
-        BytesIO(base64.b64decode(base64.b64encode(db_sess.query(User).filter(User.email == email).first().avatar))))
+def image(email: str, img_in_bytes=BytesIO()):
+    im = Image.open(img_in_bytes)
     im = im.resize((80, 80))
     im.save(f"static/img/users_avatars/image_of_{email}_.png", 'PNG')
 

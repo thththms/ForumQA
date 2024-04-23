@@ -14,7 +14,6 @@ class User(SqlAlchemyBase, UserMixin):
                               index=True, unique=True, nullable=True)
     nickname = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     age_of_python = sqlalchemy.Column(sqlalchemy.Integer, nullable=True)
-    avatar = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     hashed_password = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     created_date = sqlalchemy.Column(sqlalchemy.DateTime,
                                      default=datetime.datetime.now)

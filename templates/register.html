@@ -79,17 +79,12 @@
             </div>
       {% endfor %}
       <div class="block1">
-          {{ form.avatar.label }}
+          Аватар
         </div>
       <div>
-            {{ form.avatar(type="file", class="block4", id="photo") }}<br/>
+            <input type="file" class="block4" id="photo" name="file"><br/>
           <br/>
         </div>
-      {% for error in form.avatar.errors %}
-            <div class="alert alert-danger" role="alert">
-                {{ error }}
-            </div>
-      {% endfor %}
     <a href="./login" class="ref_on_log">
               <span>Уже есть аккаунт?</span>
           </a>

@@ -10,5 +10,4 @@ class ReqisterForm(FlaskForm):
     password_again = PasswordField('Повторите пароль', validators=[DataRequired()])
     nickname = StringField('Никнейм', validators=[DataRequired()])
     age_of_python = IntegerField('Сколько лет вы изучаете python', validators=[DataRequired()])
-    avatar = FileField('Аватар', validators=[FileRequired(), FileAllowed(['jpg', 'png', 'jpeg'], 'Только картинки!')])
     submit = SubmitField('Войти')
