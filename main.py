@@ -11,11 +11,9 @@ import base64
 from PIL import Image
 from io import BytesIO
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
-from flask_restful import reqparse, abort, Api, Resource
 import requests
 
 app = Flask(__name__)
-api = Api(app)
 login_manager = LoginManager()
 login_manager.init_app(app)
 app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
@@ -73,29 +71,28 @@ def register():
     if form.validate_on_submit():
         avatar = request.files['file']
         avatar = avatar.read()
+        img_in_bytes = BytesIO(avatar)
         if not avatar:
             response = requests.get("https://api.thecatapi.com/v1/images/search")
             url = response.json()[0]['url']
             response = requests.get(url)
-            image(form.email.data, img_in_bytes=BytesIO(response.content))
-            return redirect('/login')
+            img_in_bytes = BytesIO(response.content)
 
-        else:
-            if form.password.data != form.password_again.data:
-                return render_template('register.html', form=form, message="Пароли не совпадают")
-            db_sess = db_session.create_session()
-            if db_sess.query(User).filter(User.email == form.email.data).first():
-                return render_template('register.html', form=form, message="Такой пользователь уже есть")
-            user = User(
-                email=form.email.data,
-                nickname=form.nickname.data,
-                age_of_python=form.age_of_python.data,
-            )
-            user.set_password(form.password.data)
-            db_sess.add(user)
-            db_sess.commit()
-            image(form.email.data, BytesIO(avatar))
-            return redirect('/login')
+        if form.password.data != form.password_again.data:
+            return render_template('register.html', form=form, message="Пароли не совпадают")
+        db_sess = db_session.create_session()
+        if db_sess.query(User).filter(User.email == form.email.data).first():
+            return render_template('register.html', form=form, message="Такой пользователь уже есть")
+        user = User(
+            email=form.email.data,
+            nickname=form.nickname.data,
+            age_of_python=form.age_of_python.data,
+        )
+        user.set_password(form.password.data)
+        db_sess.add(user)
+        db_sess.commit()
+        image(form.email.data, img_in_bytes)
+        return redirect('/login')
     return render_template('register.html', form=form)
 
 
