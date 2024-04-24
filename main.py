@@ -44,7 +44,7 @@ def index():
     questions = db_sess.query(Questions)
 
     param = {}
-    param['questions'] = questions
+    param['questions'] = list(reversed(list(questions)))
     param['top_answ_user'] = top_answ_user
     param['top_quest_user'] = top_quest_user
     return render_template('index.html', **param)

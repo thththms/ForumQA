@@ -131,3 +131,9 @@
   font-size: 28px;
   color: black;
   }
+
+body{
+    background-image: url("../img/bg.jpg");
+    background-attachment: fixed;
+    background-size: cover;
+}

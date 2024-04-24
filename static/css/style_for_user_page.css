@@ -79,3 +79,10 @@
   color: black;
   font-weight: bold;
   }
+
+
+body{
+    background-image: url("../img/bg.jpg");
+    background-attachment: fixed;
+    background-size: cover;
+}
